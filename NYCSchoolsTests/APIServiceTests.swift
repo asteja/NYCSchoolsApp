@@ -6,27 +6,47 @@
 //
 
 import XCTest
+@testable import NYCSchools
 
 class APIServiceTests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    
+    let target = APIService.shared
+    
+    // This test is used to test the response time of api by expecting response in 2 seconds
+    func testGetHighSchools() {
+        //Given
+        let exp = expectation(description: "Get High Schools")
+        //When
+        Task {
+            let result = try await target.getHighSchools()
+            switch result {
+            case .success(let data):
+                XCTAssertNotNil(data)
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+            exp.fulfill()
         }
+        //Then
+        wait(for: [exp], timeout: 2)
     }
-
+    
+    // This test is used to test the response time of api by expecting response in 2 seconds
+    func testGetSATResults() {
+        //Given
+        let exp = expectation(description: "Get SAT Results")
+        //When
+        Task {
+            let result = try await target.getSATResults()
+            switch result {
+            case .success(let data):
+                XCTAssertNotNil(data)
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+            exp.fulfill()
+        }
+        //Then
+        wait(for: [exp], timeout: 2)
+    }
 }
