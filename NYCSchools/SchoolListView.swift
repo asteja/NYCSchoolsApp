@@ -7,15 +7,35 @@
 
 import SwiftUI
 
-struct ContentView: View {
+//School List view displays the list of the schools in the new york
+//BY defaulte SwiftUI always places the views in the safe area
+struct SchoolListView: View {
+    
+    @EnvironmentObject var viewModel: ViewModel
+    
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        NavigationView{
+            List(viewModel.schools) { school in
+                NavigationLink(school.name) {
+                    DetailSchoolView(school: school)
+                }
+            }
+            .navigationTitle("NYC High Schools")
+        }
+        .alert("Please check your connection", isPresented: $viewModel.showAlert) {
+            Button("OK", role: .cancel) { }
+        }
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+extension School: Identifiable {
+    var id: UUID {
+        return UUID()
+    }
+}
+
+struct SchoolListView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        SchoolListView()
     }
 }
